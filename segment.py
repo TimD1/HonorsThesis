@@ -105,8 +105,8 @@ def generate_segments(full_filename, summary=False):
 		if i % 100 == 0:
 			percent = (i / nframes)
 			bars = percent*40
-			sys.stdout.write("\rSegmenting: [{0}{1}] {2}%   ".format("|"*int(bars), \
-				" "*int(40-bars), int(percent*100)))
+			sys.stdout.write("\rSegmenting {0}: [{1}{2}] {3}%   ".format(
+				full_filename, "|"*int(bars), " "*int(40-bars), int(percent*100)))
 			sys.stdout.flush()
 
 # close writers
