@@ -16,8 +16,10 @@ MAX_SEGMENT_LENGTH = 150
 # image width/height, bounding box placement
 HEIGHT = 512
 WIDTH = 640
-Y0, Y1 = 224, 444
-X0, X1 = 168, 376
+Y0 = 200
+Y1 = Y0 + 256
+X0 = 200
+X1 = X0 + 256
 
 
 def generate_segments(full_filename, summary=False):
@@ -59,7 +61,8 @@ def generate_segments(full_filename, summary=False):
 		image = np.maximum(image - background, np.zeros(image.shape))
 
 		# check if at least 10 bottom pixels belong to a hand
-		if(np.sum(image[Y1:Y1+1, X0:X1] > HAND_CUTOFF) > 3):
+		if (np.sum(image[Y1:Y1+1, X0:X1] > HAND_CUTOFF) > 3 or 
+				np.sum(image[Y0:Y0+1, X0:X1] > HAND_CUTOFF) > 3):
 
 			# if hand just entered image and segment was long enough, start new segment
 			if(i - last_new_segment > MIN_SEGMENT_LENGTH and was_low):
