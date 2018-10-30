@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 from enum import IntEnum
 
 # set globals for this script
-folder = "."
-users = ["test_data"]
-pressures = ["hard"]
-materials = ["paper"]
+folder = "data"
+users = ["alex"]
+pressures = ["soft", "hard"]
+materials = ["concrete"]
 
 # define various entry points to script
 class StartAt(IntEnum):
@@ -35,30 +35,7 @@ else:
 	sys.exit(1)
 
 
-
 if start <= StartAt.SEGMENTS:
-	# clear directory "user/segments/" which stores extracted segments
-	print('Clearing "segments/" directories...')
-	for u in users:
-		if not os.path.exists(folder+"/"+u+"/segments/"):
-			os.makedirs(folder+"/"+u+"/segments/")
-
-		for f in os.listdir(folder+"/"+u+"/segments/"):
-			os.remove(folder+"/"+u+"/segments/"+f)
-	print('All frames/ directories cleared.')
-
-	# slice up videos into segment for each swipe, put in "user/segments/" subfolder
-	for u in users:
-		for p in pressures:
-			for m in materials:
-				segment.generate_segments(folder+"/"+u+"/"+p+"_"+m+".mov", True)
-	print('All segments have been generated.')
-	print('Please check that all generated segments are valid.\n')
-	input('Press ENTER to continue...')
-
-
-
-if start <= StartAt.FRAMES:
 	# clear directory "user/frames/" which stores extracted frames
 	print('Clearing "frames/" directories...')
 	for u in users:

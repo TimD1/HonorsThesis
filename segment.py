@@ -6,7 +6,7 @@ import sys
 
 # color-based constants
 WHITE = 255
-HAND_CUTOFF = 20
+HAND_CUTOFF = 30
 BLACK = 0
 
 # video segment lengths, in frames
@@ -16,10 +16,10 @@ MAX_SEGMENT_LENGTH = 150
 # image width/height, bounding box placement
 HEIGHT = 512
 WIDTH = 640
-Y0 = 200
-Y1 = Y0 + 256
-X0 = 200
+X0 = 220
 X1 = X0 + 256
+Y0 = 120
+Y1 = Y0 + 256
 
 
 def generate_segments(full_filename, summary=False):
@@ -60,9 +60,11 @@ def generate_segments(full_filename, summary=False):
 		image = np.array(image).astype(int)[:,:,0]
 		image = np.maximum(image - background, np.zeros(image.shape))
 
-		# check if at least 10 bottom pixels belong to a hand
+		# check if at least 3 edge pixels belong to a hand
 		if (np.sum(image[Y1:Y1+1, X0:X1] > HAND_CUTOFF) > 3 or 
-				np.sum(image[Y0:Y0+1, X0:X1] > HAND_CUTOFF) > 3):
+				np.sum(image[Y0:Y0+1, X0:X1] > HAND_CUTOFF) > 3 or
+				np.sum(image[Y0:Y1, X0:X0+1] > HAND_CUTOFF) > 3 or
+				np.sum(image[Y0:Y1, X1:X1+1] > HAND_CUTOFF) > 3):
 
 			# if hand just entered image and segment was long enough, start new segment
 			if(i - last_new_segment > MIN_SEGMENT_LENGTH and was_low):
