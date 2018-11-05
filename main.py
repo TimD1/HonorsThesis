@@ -6,6 +6,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import IntEnum
+from operator import itemgetter
 
 # set globals for this script
 folder = "data"
@@ -20,18 +21,18 @@ class StartAt(IntEnum):
 start = StartAt.SEGMENTS
 
 # validate command-line parameters
-if len(sys.argv) == 1:
-	pass
-elif len(sys.argv) == 2:
+if len(sys.argv) == 2:
 	if sys.argv[1] == "segments":
 		start = StartAt.SEGMENTS
 	elif sys.argv[1] == "frames":
 		start= StartAt.FRAMES
 	else:
-		print('Usage: \n\tpython main.py\n\tpython main.py <start>\n\t\twhere <start> is one of: "segments", "frames"')
+		print('Usage: \n\tpython main.py <start>')
+		print('\t\twhere <start> is one of: "segments", "frames"')
 		sys.exit(1)
 else:
-	print('Usage: \n\tpython main.py\n\tpython main.py <start>\n\t\twhere <start> is one of: "segments", "frames"')
+	print('Usage: \n\tpython main.py <start>')
+	print('\t\twhere <start> is one of: "segments", "frames"')
 	sys.exit(1)
 
 
@@ -46,33 +47,31 @@ if start <= StartAt.SEGMENTS:
 			os.remove(folder+"/"+u+"/frames/"+f)
 	print('All frames/ directories cleared.')
 
-	# generate profile graph of each swipe, to determine which frames to select
-	print('Generating time-intensity profiles for each swipe...')
+	# determine which frames to use for further analysis
+	print('Extracting relevant frames from each swipe video...')
 	for u in users:
 		for f in os.listdir(folder+"/"+u+"/segments/"):
-			x = []
-			y1 = []
-			y2 = []
+
+			# calculate sum(log(frame_vals)) and keep top 25 frames
+			frame_sums = []
 			filename = folder + "/" + u + "/segments/" + f
 			reader = imageio.get_reader(filename, 'ffmpeg')
 			for i, image in enumerate(reader):
+				image = np.array(image).astype(np.float32)[:,:,0]
+				image[image < 1] += 1
+				total = np.sum(np.log2(image))
+				frame_sums.append((i, total))
+			frame_sums.sort(key=itemgetter(1), reverse=True)
+			frames = [x for (x,y) in frame_sums[:25]]
+			for i, image in enumerate(reader):
 				image = np.array(image).astype(np.uint8)[:,:,0]
-				sum1 = np.sum(image)
-				image[image == 0] = 1
-				sum2 = np.sum(np.log(image))
-				x.append(i)
-				y1.append(sum1)
-				y2.append(sum2)
-				scipy.misc.toimage(image).save(folder+"/"+u+"/frames/"+
-						os.path.splitext(f)[0]+"_"+str(i)+".jpg")
-
-			plt.plot(x,y1,'b')
-			plt.title('Swipe ' + f + ' sum')
-			plt.show()
-			plt.plot(x,y2,'g')
-			plt.title('Swipe ' + f + ' logsum')
-			plt.show()
-	print('All time-intensity profiles have been generated.')
+				if i not in frames:
+					continue
+				else:
+					# print(filename, i, np.any(np.isnan(
+					scipy.misc.toimage(image).save(folder+"/"+u+"/frames/"+
+							os.path.splitext(f)[0]+"_"+str(i)+".jpg")
+	print('25 frames have been extracted from each video..')
 
 
 # # generate images for each swipe
