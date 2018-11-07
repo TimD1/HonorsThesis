@@ -10,9 +10,7 @@ from operator import itemgetter
 
 # set globals for this script
 folder = "data"
-users = ["alex"]
-pressures = ["soft", "hard"]
-materials = ["concrete"]
+users = ["alex", "ben", "miao", "natasha", "nick", "sarah", "sean", "spencer", "tim", "yijun"]
 
 # define various entry points to script
 class StartAt(IntEnum):
@@ -50,34 +48,30 @@ if start <= StartAt.SEGMENTS:
 	# determine which frames to use for further analysis
 	print('Extracting relevant frames from each swipe video...')
 	for u in users:
+		print('\tExtracting frames for user', u)
 		for f in os.listdir(folder+"/"+u+"/segments/"):
 
-			# calculate sum(log(frame_vals)) and keep top 25 frames
-			frame_sums = []
+			# set up image reader
 			filename = folder + "/" + u + "/segments/" + f
 			reader = imageio.get_reader(filename, 'ffmpeg')
+
+			# calculate total frames, weighted/unweighted frame intensities
+			total_intensity = 0
+			weighted_total_intensity = 0
+			frame_count = 0
 			for i, image in enumerate(reader):
-				image = np.array(image).astype(np.float32)[:,:,0]
-				image[image < 1] += 1
-				total = np.sum(np.log2(image))
-				frame_sums.append((i, total))
-			frame_sums.sort(key=itemgetter(1), reverse=True)
-			frames = [x for (x,y) in frame_sums[:25]]
+				frame_count += 1
+				image = np.array(image).astype(np.uint8)[:,:,0]
+				total_intensity += np.sum(image)
+				weighted_total_intensity += (i+1)*np.sum(image)
+
+			# select up to 25 frames in right time span with min intensity
+			center_frame = weighted_total_intensity // total_intensity
+			avg_intensity = total_intensity // frame_count
 			for i, image in enumerate(reader):
 				image = np.array(image).astype(np.uint8)[:,:,0]
-				if i not in frames:
-					continue
-				else:
-					# print(filename, i, np.any(np.isnan(
+				if (i >= center_frame-5 and i < center_frame + 20 and 
+						np.sum(image) > 0.5*avg_intensity):
 					scipy.misc.toimage(image).save(folder+"/"+u+"/frames/"+
 							os.path.splitext(f)[0]+"_"+str(i)+".jpg")
-	print('25 frames have been extracted from each video..')
-
-
-# # generate images for each swipe
-# for u in users:
-# 	# create folder to store select frames
-# 	for f in os.listdir(folder+"/"+u+"/segments/"):
-		
-
-print('End')
+	print('Up to 25 frames have been extracted from each video..')
