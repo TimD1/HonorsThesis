@@ -55,23 +55,27 @@ if start <= StartAt.SEGMENTS:
 			filename = folder + "/" + u + "/segments/" + f
 			reader = imageio.get_reader(filename, 'ffmpeg')
 
-			# calculate total frames, weighted/unweighted frame intensities
+			# calculate total frames and average frame intensity
 			total_intensity = 0
-			weighted_total_intensity = 0
 			frame_count = 0
 			for i, image in enumerate(reader):
 				frame_count += 1
-				image = np.array(image).astype(np.uint8)[:,:,0]
+				image = np.array(image).astype(np.uint8)[:,:,0].astype(np.float32)
 				total_intensity += np.sum(image)
-				weighted_total_intensity += (i+1)*np.sum(image)
-
-			# select up to 25 frames in right time span with min intensity
-			center_frame = weighted_total_intensity // total_intensity
 			avg_intensity = total_intensity // frame_count
+
+			high_intensity_frames = []
 			for i, image in enumerate(reader):
-				image = np.array(image).astype(np.uint8)[:,:,0]
-				if (i >= center_frame-5 and i < center_frame + 20 and 
-						np.sum(image) > 0.5*avg_intensity):
+				image = np.array(image).astype(np.uint8)[:,:,0].astype(np.float32)
+				if np.sum(image) > avg_intensity:
+					high_intensity_frames.append(i)
+
+			# select frames during user swipe
+			first = min(high_intensity_frames)
+			last = min(first + 42, max(high_intensity_frames))
+			for i, image in enumerate(reader):
+				if i >= (first + (last-first)//3) and i < last:
+					image = np.array(image).astype(np.uint8)[:,:,0]
 					scipy.misc.toimage(image).save(folder+"/"+u+"/frames/"+
 							os.path.splitext(f)[0]+"_"+str(i)+".jpg")
-	print('Up to 25 frames have been extracted from each video..')
+	print('Frames have been extracted from each video..')
