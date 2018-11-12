@@ -1,0 +1,7 @@
+backup_data/
+noisy_data/
+test_data/
+__pycache__/
+vars/
+data/*/segments/*
+data/*/*.mov
