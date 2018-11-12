@@ -6,9 +6,10 @@ MAINTAINER Tim Dunn (dunntj@clarkson.edu)
 WORKDIR /thesis
 COPY . /thesis
 
-# set up git and vim
+# install git, vim, opencv
 RUN apt-get update --assume-yes
-RUN apt-get install vim git --assume-yes
+RUN pip install opencv-python
+RUN apt-get install vim git libsm6 libxrender-dev --assume-yes
 RUN git config --global core.editor "vim"
 RUN git config --global user.email "dunntj@clarkson.edu"
 RUN git config --global user.name "Tim Dunn"
