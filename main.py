@@ -100,21 +100,27 @@ if start <= StartAt.SEGMENTS:
 						high_intensity_frames.append(i)
 
 				# set times when hand enters and leaves video
-				first = min(high_intensity_frames)
-				last = min(first + 42, max(high_intensity_frames))
+				hand_enters = min(high_intensity_frames)
+				hand_leaves = min(hand_enters + 42, max(high_intensity_frames))
 
 				# ignore first third since user isn't swiping yet
-				start = first + (last-first) // 3
-				stop = last
+				# this is approximately the start and stop of the swipe
+				start = hand_enters + (hand_leaves-hand_enters) // 3
+				stop = hand_leaves
+				min_frames = min(min_frames, stop-start)
 				if stop-start < 8:
 					print('\t\tWARNING: only '+str(stop-start)+' frames extracted from '+f)
 					print('\t\tPlease verify that there are no errors in this video')
-				min_frames = min(min_frames, stop-start)
+					continue
+
+				# from within the swipe, take the middle 8 frames
+				first = start + (stop-start-8)//2
+				last = first + 8
 
 				# extract and save relevant frames
 				for i, image in enumerate(reader):
-					if i >= start and i < stop:
-						idx = i-start+1
+					if i >= first and i < last:
+						idx = i-first+1
 						image = np.array(image).astype(np.uint8)[:,:,0]
 						scipy.misc.toimage(image).save(folder+"/"+u+"/frames/"+
 								m+"/"+p+"/"+n+"_"+str(idx)+".jpg")
