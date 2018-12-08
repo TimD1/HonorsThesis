@@ -16,6 +16,9 @@ users = ["alex", "ben", "miao", "natasha", "nick", "sarah", "sean", "spencer", "
 mats = ["cloth", "concrete", "door", "drywall", "laminant", "whiteboard"]
 pressures = ["hard", "soft"]
 
+# number of frames to store per video
+FRAMES_PER_VID = 8
+
 def make_re(pressures, mats):
 
 	# start pressure group
@@ -108,14 +111,14 @@ if start <= StartAt.SEGMENTS:
 				start = hand_enters + (hand_leaves-hand_enters) // 3
 				stop = hand_leaves
 				min_frames = min(min_frames, stop-start)
-				if stop-start < 8:
+				if stop-start < FRAMES_PER_VID:
 					print('\t\tWARNING: only '+str(stop-start)+' frames extracted from '+f)
 					print('\t\tPlease verify that there are no errors in this video')
 					continue
 
 				# from within the swipe, take the middle 8 frames
-				first = start + (stop-start-8)//2
-				last = first + 8
+				first = start + (stop-start-FRAMES_PER_VID)//2
+				last = first + FRAMES_PER_VID
 
 				# extract and save relevant frames
 				for i, image in enumerate(reader):
