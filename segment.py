@@ -7,15 +7,12 @@ import sys
 # color-based constants
 WHITE = 255
 HAND_CUTOFF = 30
-BLACK = 0
 
 # video segment lengths, in frames
 MIN_SEGMENT_LENGTH = 25
 MAX_SEGMENT_LENGTH = 150
 
 # image width/height, bounding box placement
-HEIGHT = 512
-WIDTH = 640
 X0 = 220
 X1 = X0 + 256
 Y0 = 120
@@ -23,7 +20,16 @@ Y1 = Y0 + 256
 
 
 def generate_segments(full_filename, summary=False):
+	""" Given the filename of a video which contains numerous consecutive finger
+	swipes, and a bounding box specified by the global values X0, X1, Y0, Y1, 
+	this function will crop the video to only contain the bounding box, perform 
+	background subtraction, and then perform temporal segmentation, resulting in 
+	numerous video segments which each contain a single swipe (which wil be 
+	stored in ./segments/). A summary video is also generated, which shows 
+	bounding box placement, whether the current frame is being stored in one 
+	of the video segments, and is played at twice the original speed."""
 
+	# split filename and create folder to store segments
 	filename, filetype = os.path.splitext(full_filename)
 	folder, filename = os.path.split(filename)
 	if len(folder) > 0:
@@ -88,7 +94,7 @@ def generate_segments(full_filename, summary=False):
 			if not segment_writer.closed:
 				segment_writer.close()
 
-		# add border around bounding area which is captured 
+		# add border for summary video around bounding area which is captured 
 		image[Y0-1,X0:X1] = WHITE*np.ones(X1-X0)
 		image[Y1,X0:X1] = WHITE*np.ones(X1-X0)
 		image[Y0:Y1,X0-1] = WHITE*np.ones(Y1-Y0)
@@ -114,7 +120,7 @@ def generate_segments(full_filename, summary=False):
 				full_filename, "|"*int(bars), " "*int(40-bars), int(percent*100)))
 			sys.stdout.flush()
 
-# close writers
+	# close writers
 	print("")
 	segment_writer.close()
 	if summary:

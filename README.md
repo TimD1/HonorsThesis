@@ -1,19 +1,20 @@
 # Thermal Finger Swipe Pressure Detection
+This work was completed for my Clarkson University undergraduate Honors Thesis.
+
+### Directory Structure
+`data/user/video.mov` contains the original videos for each user  
+`data/user/segments/video.mov` contains the video segments for each user  
+`data/user/frames/material/pressure/image.jpg` contains raw grayscale frames  
+`data/user/swipe_frames/material/pressure/image.jpg` contains processed frames  
 
 ### Procedure
 0. __ffmpeg__ was used to crop the videos in time to avoid dynamic rescaling occurring at the start of videos. The syntax for performing this with minimal information loss due to compression is as follows:
-ffmpeg -i input.mov -ss start/fps -t (end-start)/fps -vf "crop=256:256:xstart:ystart" -c:v libx264 -crf 17 output.mov
-1. __segment.py__ is called manually for each unsegmented video with the correct x and y parameters to capture swipe paths.
-2. __main.py__ Runs entire pipeline, using globals _folder_, _users_, _pressures_, and _materials_. A second input argument ("segments", "frames") can specify where on the pipeline to start.
-
-
-### Scripts
-1. __main.py__ Runs entire pipeline, using globals _folder_, _users_, _pressures_, and _materials_. A second input argument ("segments", "frames") can specify where on the pipeline to start.
-2. __segment.py__ segments a single long video capture into consecutive swipes
-
-
-### Directory Structure
-More on this later
+```
+> ffmpeg -i input.mov -ss start/fps -t (end-start)/fps -vf "crop=256:256:xstart:ystart" -c:v libx264 -crf 17 output.mov
+```
+1. __segment.py__ is called manually for each unsegmented video with the correct X0 and Y0 parameters to set the bounding boxes and capture swipe paths. Several swipes were removed after inspection due to flat-field-correction dropping frames. Bounding boxes and removed swipes are listed in __bounding_boxes_and_removed_swipes.csv__.
+2. __extract_frames.py__ extracts a specified number of the heuristically-determined "most relevant" frames from each video segment.
+3. __classification.ipynb__ is run on a Jupyter Notebook server using the GPU in Docker.
 
 ### Running project in Jupyter Notebook on GPU
 The current directory should contain both all Github code and a folder with the swipe data. First ensure that the code is up-to-date with the Github repo:
