@@ -1,0 +1,13 @@
+,Alex,Ben,Miao,Natasha,Nick,Sarah,Sean,Spencer,Tim,Yijun
+soft_cloth,x 200 y 160,x 200 y 160,x 160 y 220,x 200 y 188,x 200 y 200 R1,x 160 y 210,x 200 y 130,x 200 y 200,x 200 y 170,x 200 y 160
+hard_cloth,x 200 y 160,x 200 y 160,x 160 y 220,x 200 y 188,x 200 y 200,x 160 y 210,x 200 y 130,x 200 y 200,x 200 y 170,x 200 y 150
+soft_concrete,x 300 y 50 R 27,x 270 y 150,x 240 y 100 R 3 26,x 200 y 120 R9,x 240 y 50,x 210 y 100,x 200 y 100,x 250 y 100 R 26 28-29,x 200 y 100 R 27,x 225 y 100
+hard_concrete,x 300 y 50,x 270 y 150 R 27 28,x 240 y 100 R 27,x 200 y 120,x 240 y 50 R 27 28,x 210 y 100 R 9 27-28,x 200 y 100,x 250 y 100,x 190 y 100 R 27-29,x 230 y 100 R 1 28-29
+soft_door,x 240 y 50 R 26,x 240 y 50,x 180 y 100,x 200 y 100 R 7-8 17 19 28 29,x 240 y 50,x 240 y 50 R 27,x 240 y 50,x 240 y 100 R 2,x 200 y 100,x 200 y 100 R 27
+hard_door,x 240 y 50,x 240 y 40,x 180 y 100,x 200 y 100 R 6 24 28,x 240 y 50,x 240 y 50 R 27 28,x 300 y 50,x 240 y 100 R 26-27,x 200 y 100,x 200 y 100 R 21
+soft_drywall,x 160 y 120,x 160 y 120,x 160 y 180,x 200 y 150,x 160 y 152 R6,x 160 y 160 R 5,x 200 y 120,x 160 y 145 R 19,x 200 y 130,x 200 y 100 R 21
+hard_drywall,x 160 y 120,x 160 y 120,x 160 y 180,x 200 y 150,x 160 y 152,x 160 y 160,x 200 y 120 R 19,x 200 y 145,x 200 y 130,x 200 y 100
+soft_laminant,x 200 y 160 R 4,x 200 y 160,x 200 y 210,x 200 y 180 R 1 4,x 200 y 176 R 1 4,x 210 y 200 R 26,x 160 y 160,x 180 y 200 R21,x 200 y 170 R 3,x 200 y 160
+hard_laminant,x 200 y 160,x 200 y 160,x 200 y 210,x 200 y 180 ,"x 200, y 176, R 12",x 210 y 200,x 160 y 160,x 180 y 200,x 200 y 170 R 7,x 200 y 160
+soft_whiteboard,x 200 y 120,x 240 y 120,x 200 y 120,x 200 y 120 R 1 4 ,x 220 y 120 R 2 28,x 200 y 120 R 26-28,x 240 y 120,x 200 y 120 R 16 27,x 220 y 160 R 27,x 200 y 120 R 1 13 21 28-29
+hard_whiteboard,x 200 y 120 R 26-29,x 240 y 120,x 200 y 120 R 1-2 ,x 200 y 120 R 6 ,x 220 y 120 R 27-28,x 200 y 120 R 26 27,x 240 y 120,x 200 y 120,x 220 y 160 R 27-28,x 200 y 120 R 19
