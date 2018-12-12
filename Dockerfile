@@ -8,7 +8,7 @@ COPY . /thesis
 
 # install git, vim, opencv
 RUN apt-get update --assume-yes
-RUN pip install opencv-python
+RUN pip install opencv-python imageio
 RUN apt-get install vim git libsm6 libxrender-dev --assume-yes
 RUN git config --global core.editor "vim"
 RUN git config --global user.email "dunntj@clarkson.edu"
